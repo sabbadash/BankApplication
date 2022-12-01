@@ -9,29 +9,28 @@ import java.util.StringTokenizer;
 
 public class User {
     
-    private final File usersFile = new File("src/usersFile.txt");
-    private String  forename;
-    private String  surname;
-    private String  id;
-    private int     age;
-    
+    public final File usersFile = new File("src/usersFile.txt");
     private ArrayList<Account> accounts = new ArrayList<>();
+    private String  
+            forename,
+            surname,
+            id;
+    private int age;
+    
+    public User() { }
     
     public User(String forename, String surname, int age) throws Exception {
-        
+        this.id = generateID();
         this.forename = forename;
         this.surname = surname;
         this.age = age;
-        this.id = generateID();
-        
-        this.writeUser();
-        
+
+        this.addUser();
     }
         
-    public void writeUser() throws Exception {
-        
+    public void addUser() throws Exception {
         FileWriter fw = new FileWriter(usersFile, true);
-
+        
         fw.write(id + "#");
         fw.write(forename + "#");
         fw.write(surname + "#");
@@ -40,8 +39,42 @@ public class User {
         fw.close();
     }
     
-    private String generateID() throws Exception {
+    public String getUserBalance(String accountNumber) throws Exception {
+        FileReader fr = new FileReader(new Account().accountsFile);
+        BufferedReader br = new BufferedReader(fr);
         
+        String data;
+        while ((data = br.readLine()) != null) {
+           
+            StringTokenizer st1 = new StringTokenizer(data, "\n");
+            
+            while(st1.hasMoreTokens()) {
+                String fullLine = st1.nextToken();
+                String idCheck = Character.toString(fullLine.charAt(0));    //id
+               
+                if(idCheck.equals(this.getId())) {
+                   
+                    StringTokenizer st2 = new StringTokenizer(fullLine, "#");
+                    
+                    while(st2.hasMoreTokens()) {
+                        
+                        String id = st2.nextToken();
+                        String accNumber = st2.nextToken();
+                        String balance = st2.nextToken();
+                        
+                        if(accNumber.equals(accountNumber)) {
+                            br.close();
+                            fr.close();
+                            return balance;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    private String generateID() throws Exception {
         if(!usersFile.exists()) {
             return "1";
         }
@@ -54,7 +87,6 @@ public class User {
         while((currentLine = br.readLine()) != null) {
             lastLine = currentLine;
         }
-
         br.close();
         fr.close();
 
@@ -64,5 +96,17 @@ public class User {
         
         return currentId;
     }
-  
+
+    public String getId() {
+        return id;
+    }
+
+    public String getForename() {
+        return forename;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
 }
