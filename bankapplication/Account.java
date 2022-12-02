@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Account {
     
-    public final File accountsFile = new File("src/accountsFile.txt");
+    public File accountsFile = new File("src/accountsFile.txt");
     private String  
             holderID, 
             holderName, 
@@ -21,26 +21,21 @@ public class Account {
         holderName = user.getForename() + user.getSurname();
         accountNumber = generateAccNumber();
         balance = 0.0d;
-        
     }
     
     public void addAccount() throws Exception {
         FileWriter fw = new FileWriter(accountsFile, true);
         
         fw.write(holderID + "#");
-        //fw.write(generateAccNumber() + "#");
         fw.write(accountNumber + "#");
         fw.write(Double.toString(balance) + "\n");
-
         fw.close();
     }
     
     private String generateAccNumber() throws Exception {
         Thread.sleep(100);
         int randNum = (int) ((new Date()).getTime() % 10000);
-        String accNumber = String.format("%04d", randNum);
-        
-        return accNumber;
+        return String.format("%04d", randNum);
     }
 
     @Override
@@ -48,7 +43,6 @@ public class Account {
         int hash = 17;
         hash = 31 * hash + Objects.hashCode(this.holderID);
         hash = 31 * hash + Objects.hashCode(this.holderName);
-        
         return hash;
     }
 
