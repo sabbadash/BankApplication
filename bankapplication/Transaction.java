@@ -4,13 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
 public class Transaction {
     
     public File transactionsFile = new File("src/transactionsFile.txt");
-    private File temporaryFile = new File("src/temporaryFile.txt");
+    public File temporaryFile = new File("src/temporaryFile.txt");
     public File accountsFile = new File(new Account().accountsFile.toString());
+    private DateTimeFormatter dateForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private DateTimeFormatter timeForm = DateTimeFormatter.ofPattern("HH:mm:ss");
     private User 
             senderObj, 
             receiverObj;
@@ -26,7 +30,6 @@ public class Transaction {
             txnTime;
     private double  txnAmount;
     
-
     public Transaction(
             User    sender, 
             String  senderAccNum, 
@@ -46,6 +49,21 @@ public class Transaction {
         txnAmount = amount;
         
         processingTxn();
+        addTxn();
+    }
+    
+    private void addTxn() throws Exception{
+        FileWriter fw = new FileWriter(transactionsFile, true);
+        LocalDateTime now = LocalDateTime.now();
+        
+        String currentDate = now.format(dateForm);
+        String currentTime = now.format(timeForm);
+        
+        fw.write(senderID + "#" + senderAccNumber + "#");
+        fw.write(receiverID + "#" + receiverAccNumber + "#");
+        fw.write(Double.toString(txnAmount) + "#");
+        fw.write(currentDate + "#" + currentTime + "\n");
+        fw.close();
     }
     
     private void processingTxn() throws Exception {
@@ -84,7 +102,6 @@ public class Transaction {
             fw.close();
             accountsFile.delete();
             temporaryFile.renameTo(accountsFile);
-            
         } else {
             System.out.println("Sender doesn't have enough money");
         }

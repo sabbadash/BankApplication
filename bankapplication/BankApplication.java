@@ -23,8 +23,11 @@ public class BankApplication {
         acc4.addAccount();
         
         Transaction txn = new Transaction(user1, "1111", user2, "2222", 10.0d);
+        Thread.sleep(1000);
         Transaction txn2 = new Transaction(user2, "2222", user3, "3333", 5.0d);
+        Thread.sleep(1000);
         Transaction txn3 = new Transaction(user3, "3333", user4, "4444", 6.0d);
+        Thread.sleep(1000);
         
     }
     
