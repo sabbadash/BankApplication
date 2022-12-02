@@ -23,6 +23,20 @@ public class Account {
         balance = 0.0d;
     }
     
+    public Account(User user, double balance) throws Exception {
+        holderID = user.getId();
+        holderName = user.getForename() + user.getSurname();
+        accountNumber = generateAccNumber();
+        this.balance = balance;
+    }
+    
+    public Account(User user, double balance, String accNum) throws Exception {
+        holderID = user.getId();
+        holderName = user.getForename() + user.getSurname();
+        accountNumber = accNum;
+        this.balance = balance;
+    }
+    
     public void addAccount() throws Exception {
         FileWriter fw = new FileWriter(accountsFile, true);
         
